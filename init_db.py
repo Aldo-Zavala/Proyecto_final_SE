@@ -21,3 +21,30 @@ def inicializar_base_de_datos():
             stock INTEGER NOT NULL
         )
     ''')
+    cursor.execute("SELECT COUNT(*) FROM inventario_llantas")
+    if cursor.fetchone()[0] == 0:
+        print("Insertando datos semilla en el inventario...")
+        llantas_semilla = [
+            ('Michelin Primacy', 205, 55, 16, 91, 'sedan', 'premium', 2450.00, 12),
+            ('Michelin LTX', 225, 65, 17, 102, 'suv', 'alta_durabilidad', 3800.00, 2),     # STOCK BAJO (Ideal para probar alertas)
+            ('Bridgestone Ecopia', 195, 65, 15, 91, 'sedan', 'economica', 1750.00, 20),
+            ('Goodyear Eagle', 215, 60, 16, 95, 'sedan', 'premium', 2100.00, 8),
+            ('Pirelli Scorpion', 265, 70, 17, 115, 'camioneta', 'alta_durabilidad', 4500.00, 16),
+            ('Continental TrueContact', 205, 55, 16, 91, 'sedan', 'economica', 1900.00, 3), # STOCK BAJO
+            ('Tornel Real', 185, 65, 14, 86, 'sedan', 'economica', 1200.00, 24)
+        ]
+        cursor.executemany('''
+            INSERT INTO inventario_llantas (marca, ancho, perfil, rin, indice_carga, tipo_vehiculo, categoria, precio, stock)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''', llantas_semilla)
+        
+        conn.commit()
+        print(f"¡Éxito! Se insertaron {len(llantas_semilla)} llantas de prueba.")
+    else:
+        print("La base de datos ya tiene datos registrados.")
+
+    conn.close()
+    print("Conexión cerrada. Base de datos 'llantas_expert.db' lista.")
+
+if __name__ == '__main__':
+    inicializar_base_de_datos()
