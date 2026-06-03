@@ -1,4 +1,5 @@
 import sqlite3
+from datetime import datetime
 
 def inicializar_base_de_datos():
     # Conectar a la base de datos (si no existe, SQLite la creará automáticamente)
@@ -21,6 +22,37 @@ def inicializar_base_de_datos():
             stock INTEGER NOT NULL
         )
     ''')
+    #TABLA DE CLIENTES
+    print("creando tabla de 'clientes'....")
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS clientes(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nombre TEXT NOT NULL,
+            telefono TEXT,
+            email TEXT,
+            total_compras INTEGER DEFAULT 0,
+            es_frecuente BOOLEAN DEFAULT 0, --1 si ha compradi 3+ veces
+            fecha_registro TEXT DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
+    #TABLA DE PEDIDOS
+    print("Creando tabla 'pedidos'...")
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS pedidos (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            cliente_id INTEGER NOT NULL,
+            llanta_id INTEGER NOT NULL,
+            cantidad INTEGER NOT NULL,
+            precio_total REAL NOT NULL,
+            descuento_aplicado REAL DEFAULT 0.0,  -- % de descuento (ej: 0.10 = 10%)
+            estado TEXT DEFAULT 'pendiente',       -- pendiente, confirmado, cancelado
+            inferencias_log TEXT,                  -- JSON con las reglas aplicadas
+            fecha TEXT DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (cliente_id) REFERENCES clientes(id),
+            FOREIGN KEY (llanta_id) REFERENCES inventario_llantas(id)
+        )
+    ''')
+    #DATOS DE INVENTARIO
     cursor.execute("SELECT COUNT(*) FROM inventario_llantas")
     if cursor.fetchone()[0] == 0:
         print("Insertando datos semilla en el inventario...")
