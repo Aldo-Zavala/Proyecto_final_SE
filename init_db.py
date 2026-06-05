@@ -1,9 +1,9 @@
 import sqlite3
 from datetime import datetime
-
+DB_NAME = 'llantas_expert.db'
 def inicializar_base_de_datos():
     # Conectar a la base de datos (si no existe, SQLite la creará automáticamente)
-    conn = sqlite3.connect('llantas_expert.db')
+    conn = sqlite3.connect('DB_NAME')
     cursor = conn.cursor()
 
     print("Creando tabla 'inventario_llantas'...")
@@ -75,8 +75,32 @@ def inicializar_base_de_datos():
     else:
         print("La base de datos ya tiene datos registrados.")
 
+    cursor.execute("SELECT COUNT(*) FROM clientes")
+    if cursor.fetchone()[0] == 0:
+        print("Insertando clientes de prueba...")
+        clientes_semilla = [
+            ('Carlos Mendoza', '3311234567', 'carlos@email.com', 5, 1),  # frecuente
+            ('Laura Pérez',    '3339876543', 'laura@email.com',  1, 0),  # nuevo
+            ('Roberto García', '3321112233', 'roberto@email.com',0, 0),  # nuevo
+        ]
+        cursor.executemany('''
+            INSERT INTO clientes (nombre, telefono, email, total_compras, es_frecuente)
+            VALUES (?, ?, ?, ?, ?)
+        ''', clientes_semilla)
+        print(f"   {len(clientes_semilla)} clientes insertados.")
+
+    conn.commit()
+    conn.close()
+    print("\n Base de datos 'llantas_expert.db' lista.")   
+
     conn.close()
     print("Conexión cerrada. Base de datos 'llantas_expert.db' lista.")
+
+def get_connection():
+    """Retorna una conexión reutilizable con row_factory para acceso por nombre de columna."""
+    conn = sqlite3.connect(DB_NAME)
+    conn.row_factory = sqlite3.Row
+    return conn
 
 if __name__ == '__main__':
     inicializar_base_de_datos()
