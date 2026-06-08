@@ -53,7 +53,7 @@ def inicializar_base_de_datos():
         )
     ''')
     #DATOS DE INVENTARIO
-    cursor.execute("SELECT COUNT(*) FROM inventario_llantas")
+    cursor.execute("SELECT CONT(*) FROM inventario_llantas")
     if cursor.fetchone()[0] == 0:
         print("Insertando datos semilla en el inventario...")
         llantas_semilla = [
