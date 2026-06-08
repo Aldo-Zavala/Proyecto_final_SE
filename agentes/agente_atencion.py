@@ -88,6 +88,7 @@ if __name__ == "__main__":
     mensajes_prueba = [
         "Hola, buenas tardes",
         "Necesito llantas para mi SUV",
+        "Necesito llantas para mi sedan",
         "¿Tienen llantas Michelin en rin 16?",
         "Quiero comprar 4 llantas para mi sedan, ¿cuánto cuestan?"
     ]
