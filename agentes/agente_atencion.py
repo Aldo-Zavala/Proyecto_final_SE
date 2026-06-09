@@ -1,14 +1,17 @@
 import os
+import sys
 from dotenv import load_dotenv
-import google.generativeai as genai
-from database import get_connection
+from google import genai
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from init_db import get_connection
 
 # Cargar la API key del archivo .env
-load_dotenv()
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+load_dotenv(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'gemini.env'))
+print("KEY CARGADA:", os.getenv("GEMINI_API_KEY")[:10])
+cliente_ia = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
-# Inicializar el modelo Gemini
-modelo = genai.GenerativeModel("gemini-1.5-flash")
+
 
 def obtener_catalogo():
     """Consulta el inventario actual de la base de datos."""
@@ -61,7 +64,10 @@ INTENCION: [la intención detectada]
 RESPUESTA: [tu respuesta al cliente]
 """
 
-    respuesta = modelo.generate_content(prompt)
+    respuesta = cliente_ia.models.generate_content(
+        model="gemini-1.5-flash",
+        contents=prompt
+    )
     texto = respuesta.text.strip()
 
     # Parsear la respuesta del modelo
