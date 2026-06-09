@@ -1,4 +1,5 @@
 .env
+gemini.env
 llantas_expert.db
 __pycache__/
 *.pyc
