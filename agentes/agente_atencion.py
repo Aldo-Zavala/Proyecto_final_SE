@@ -1,16 +1,19 @@
 import os
 import sys
 from dotenv import load_dotenv
-from google import genai
+from openai import OpenAI  # type: ignore[reportMissingImports]
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from init_db import get_connection
 
 # Cargar la API key del archivo .env
 load_dotenv(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'gemini.env'))
-print("KEY CARGADA:", os.getenv("GEMINI_API_KEY")[:10])
-cliente_ia = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+api_key = os.getenv("OPENROUTER_API_KEY")
 
+cliente_ia = OpenAI(
+    base_url="https://openrouter.ai/api/v1",
+    api_key=os.getenv("OPENROUTER_API_KEY")
+)
 
 
 def obtener_catalogo():
@@ -64,11 +67,13 @@ INTENCION: [la intención detectada]
 RESPUESTA: [tu respuesta al cliente]
 """
 
-    respuesta = cliente_ia.models.generate_content(
-        model="gemini-1.5-flash",
-        contents=prompt
+    respuesta = cliente_ia.chat.completions.create(
+        model="google/gemma-4-31b-it:free",
+        messages=[
+            {"role": "user", "content": prompt}
+        ]
     )
-    texto = respuesta.text.strip()
+    texto = respuesta.choices[0].message.content.strip()
 
     # Parsear la respuesta del modelo
     intencion = "OTRO"
