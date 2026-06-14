@@ -59,6 +59,8 @@ Tu tarea es:
 
 3. Si el cliente quiere comprar, pregúntale:
    - ¿Qué tipo de vehículo tiene? (sedan, suv, camioneta)
+   - ¿Qué tamaño de rin necesita? (si no lo menciona)
+   - ¿Qué marca de llantas prefiere?
    - ¿Qué medida necesita? (si no la menciona)
    - ¿Cuántas llantas necesita?
 
