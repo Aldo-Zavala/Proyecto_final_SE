@@ -31,7 +31,7 @@ def aplicar_inferencias(cliente, llanta, cantidad):
 
             "regla" : "STOCK_INSUFICIENTE",
             "condicion": f"stock ({llanta['stock']}) < cantidad solicitada ({cantidad})",
-            "accion": "Pedido bloqueado. Se sugiere reabastecimiento",
+            "accion": "no contamos con la cantidad solicitada. Se sugiere reabastecimiento",
             "tipo" : "error"
         })
         return inferencias, descuento, False #No se puede procesar
@@ -42,7 +42,7 @@ def aplicar_inferencias(cliente, llanta, cantidad):
         inferencias.append({
             "regla": "ALERTA_STOCK_BAJO",
             "condicion": f"stock restante ({stock_restante}) <= 3 unidades",
-            "accion": "Se recomienda reabastecer este producto pronto.",
+            "accion": "Contaremos con este producto pronto.",
             "tipo": "alerta"
         })  
 
@@ -64,7 +64,7 @@ def aplicar_inferencias(cliente, llanta, cantidad):
             "accion": "Descuento adicional del 5% por compra de 4 o más llantas.",
             "tipo": "descuento"
         })
-        # REGLA 5: Llanta de alta durabilidad para camioneta → recomendación
+        # REGLA 5: Llanta de alta durabilidad para camioneta = recomendación
     if llanta['tipo_vehiculo'] == 'camioneta' and llanta['categoria'] == 'alta_durabilidad':
         inferencias.append({
             "regla": "RECOMENDACION_CAMIONETA",
