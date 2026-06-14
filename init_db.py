@@ -1,9 +1,10 @@
 import sqlite3
 from datetime import datetime
-DB_NAME = 'llantas_expert.db'
+import os
+DB_NAME = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'llantas_expert.db')
 def inicializar_base_de_datos():
     # Conectar a la base de datos (si no existe, SQLite la creará automáticamente)
-    conn = sqlite3.connect('DB_NAME')
+    conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
 
     print("Creando tabla 'inventario_llantas'...")
@@ -53,7 +54,7 @@ def inicializar_base_de_datos():
         )
     ''')
     #DATOS DE INVENTARIO
-    cursor.execute("SELECT CONT(*) FROM inventario_llantas")
+    cursor.execute("SELECT COUNT(*) FROM inventario_llantas")
     if cursor.fetchone()[0] == 0:
         print("Insertando datos semilla en el inventario...")
         llantas_semilla = [
